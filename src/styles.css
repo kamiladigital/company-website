@@ -321,6 +321,55 @@ a {
   color: #475569;
 }
 
+.engineers {
+  background: #ffffff;
+}
+
+.engineer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.engineer-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.engineer-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+}
+
+.engineer-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #eef2ff;
+}
+
+.engineer-card h3 {
+  margin: 0 0 4px;
+}
+
+.engineer-card p {
+  margin: 0 0 8px;
+  color: #475569;
+}
+
+.engineer-link {
+  font-weight: 600;
+  color: #1d4ed8;
+}
+
 .cta-band {
   margin: 0 8vw 64px;
   padding: 32px 40px;

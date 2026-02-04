@@ -16,6 +16,16 @@ const services = [
   },
 ];
 
+const engineers = [
+  {
+    name: "Habibie Faried",
+    role: "Lead Engineer",
+    link: "https://www.linkedin.com/in/habibiefaried/",
+    avatar:
+      "https://www.gravatar.com/avatar/cb74b3079de22fbf1f4a2f86463cae73?s=240&d=identicon",
+  },
+];
+
 export default function App() {
   return (
     <div className="page">
@@ -138,6 +148,31 @@ export default function App() {
             <h3>Operate</h3>
             <p>Handover, automation, and support for stability.</p>
           </div>
+        </div>
+      </section>
+
+      <section className="section engineers">
+        <div className="section-header">
+          <h2>Engineers</h2>
+          <p>Direct access to experienced, hands-on leadership.</p>
+        </div>
+        <div className="engineer-grid">
+          {engineers.map((person) => (
+            <a
+              className="engineer-card"
+              key={person.name}
+              href={person.link}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img className="engineer-avatar" src={person.avatar} alt={person.name} />
+              <div>
+                <h3>{person.name}</h3>
+                <p>{person.role}</p>
+                <span className="engineer-link">LinkedIn</span>
+              </div>
+            </a>
+          ))}
         </div>
       </section>
 
