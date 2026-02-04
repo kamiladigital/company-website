@@ -12,3 +12,10 @@ The app will be available at the URL shown in your terminal.
 ## Build
 - `npm run build`
 - `npm run preview`
+
+## Deploy to Cloudflare Pages (UI)
+Project name: `company-website` (matches `wrangler.jsonc`).
+
+Cloudflare Pages dashboard settings:
+- Build command: `npm run build`
+- Build output directory: `dist`
