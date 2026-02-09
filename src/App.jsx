@@ -1,32 +1,126 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+
 const services = [
   {
     title: "Software Engineering",
     detail: "Production-grade systems with clean architecture and reliable delivery.",
     tools: ["Golang", "API design", "Observability"],
+    gradient: "linear-gradient(135deg, #1d4ed8, #38bdf8)",
   },
   {
     title: "Infrastructure Engineering",
     detail: "Cloud foundations with automation, cost control, and secure defaults.",
     tools: ["AWS", "terraform", "bash"],
+    gradient: "linear-gradient(135deg, #059669, #34d399)",
   },
   {
     title: "Application Security",
     detail: "Practical security reviews that ship with fixes and playbooks.",
     tools: ["Burp Suite", "nmap", "Threat modeling"],
+    gradient: "linear-gradient(135deg, #d946ef, #f0abfc)",
   },
 ];
 
-const engineers = [
+const portfolios = [
   {
-    name: "Habibie Faried",
-    role: "Lead Engineer",
-    link: "https://www.linkedin.com/in/habibiefaried/",
-    avatar:
-      "https://www.gravatar.com/avatar/cb74b3079de22fbf1f4a2f86463cae73?s=240&d=identicon",
+    name: "terimasurel.dpdns.org",
+    description: "Disposable email server",
+    image:
+      "https://kamiladigitalassets.s3.ap-southeast-1.amazonaws.com/terimasurel.dpdns.org.png",
+    link: "https://terimasurel.dpdns.org",
   },
 ];
+
+function PortfolioCarousel() {
+  const trackRef = useRef(null);
+  const [active, setActive] = useState(0);
+
+  const scrollTo = useCallback((index) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.children[index];
+    if (card) {
+      track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: "smooth" });
+    }
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const scrollLeft = track.scrollLeft;
+    const cards = [...track.children];
+    let closest = 0;
+    let minDist = Infinity;
+    cards.forEach((card, i) => {
+      const dist = Math.abs(card.offsetLeft - track.offsetLeft - scrollLeft);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    setActive(closest);
+  }, []);
+
+  const prev = () => scrollTo(Math.max(0, active - 1));
+  const next = () => scrollTo(Math.min(portfolios.length - 1, active + 1));
+
+  return (
+    <section className="section portfolio" id="portfolio">
+      <div className="section-header">
+        <h2>Portfolio</h2>
+        <p>Selected projects with clear outcomes and production-ready delivery.</p>
+      </div>
+      <div className="carousel-wrapper">
+        {portfolios.length > 1 && (
+          <button className="carousel-btn carousel-btn-prev" onClick={prev} aria-label="Previous" disabled={active === 0}>
+            &#8249;
+          </button>
+        )}
+        <div className="carousel-track" ref={trackRef} onScroll={handleScroll}>
+          {portfolios.map((project) => (
+            <article className="portfolio-card" key={project.name}>
+              <a href={project.link} target="_blank" rel="noreferrer">
+                <img className="portfolio-media" src={project.image} alt={project.name} />
+              </a>
+              <div className="portfolio-body">
+                <h3>{project.description}</h3>
+                <p className="portfolio-meta">{project.name}</p>
+                <a className="portfolio-link" href={project.link} target="_blank" rel="noreferrer">
+                  Visit project &#8594;
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+        {portfolios.length > 1 && (
+          <button className="carousel-btn carousel-btn-next" onClick={next} aria-label="Next" disabled={active === portfolios.length - 1}>
+            &#8250;
+          </button>
+        )}
+      </div>
+      {portfolios.length > 1 && (
+        <div className="carousel-dots">
+          {portfolios.map((_, i) => (
+            <button
+              key={i}
+              className={`carousel-dot${i === active ? " active" : ""}`}
+              onClick={() => scrollTo(i)}
+              aria-label={`Go to slide ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
 
 export default function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const isDark = theme === "dark";
+
   return (
     <div className="page">
       <header className="hero-alt">
@@ -35,9 +129,18 @@ export default function App() {
           <div className="nav-links">
             <a href="#services">Services</a>
             <a href="#approach">Approach</a>
+            <a href="#portfolio">Portfolio</a>
             <a href="https://github.com/kamiladigital" target="_blank" rel="noreferrer">
               GitHub
             </a>
+            <button
+              className="theme-toggle"
+              type="button"
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              aria-pressed={!isDark}
+            >
+              {isDark ? "Light mode" : "Dark mode"}
+            </button>
             <a className="cta" href="mailto:contact@kamiladigital.com">
               Contact
             </a>
@@ -95,7 +198,7 @@ export default function App() {
         <div className="grid">
           {services.map((service) => (
             <article className="card service-card" key={service.title}>
-              <div className="card-icon" />
+              <div className="card-icon" style={{ background: service.gradient }} />
               <h3>{service.title}</h3>
               <p>{service.detail}</p>
               <div className="tag-list">
@@ -151,30 +254,7 @@ export default function App() {
         </div>
       </section>
 
-      <section className="section engineers">
-        <div className="section-header">
-          <h2>Engineers</h2>
-          <p>Direct access to experienced, hands-on leadership.</p>
-        </div>
-        <div className="engineer-grid">
-          {engineers.map((person) => (
-            <a
-              className="engineer-card"
-              key={person.name}
-              href={person.link}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img className="engineer-avatar" src={person.avatar} alt={person.name} />
-              <div>
-                <h3>{person.name}</h3>
-                <p>{person.role}</p>
-                <span className="engineer-link">LinkedIn</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
+      <PortfolioCarousel />
 
       <section className="cta-band">
         <div>
